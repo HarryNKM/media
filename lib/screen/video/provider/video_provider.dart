@@ -7,11 +7,13 @@ class VideoProvider with ChangeNotifier {
   ChewieController? chewieController;
 
   void playvideo() {
-    videoPLayerController = VideoPlayerController.networkUrl(Uri.parse(
-        "https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4"));
     videoPLayerController!.initialize();
-    chewieController = ChewieController(
-        videoPlayerController: videoPLayerController!, autoPlay: true);
+    videoPLayerController= VideoPlayerController.networkUrl(Uri.parse(
+        "https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4"));
+   if(chewieController!=null){
+     chewieController = ChewieController(
+         videoPlayerController: videoPLayerController!, autoPlay: true);
+   }
     notifyListeners();
   }
 }

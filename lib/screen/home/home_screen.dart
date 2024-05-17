@@ -2,6 +2,9 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
+
+import '../music/provider/music_provider.dart';
 
 class ListScreen extends StatefulWidget {
   const ListScreen({super.key});
@@ -11,8 +14,12 @@ class ListScreen extends StatefulWidget {
 }
 
 class _ListScreenState extends State<ListScreen> {
+  MusicProvider? providerR;
+  MusicProvider? providerW;
   @override
   Widget build(BuildContext context) {
+    providerR=context.read<MusicProvider>();
+    providerW=context.watch<MusicProvider>();
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
@@ -87,15 +94,16 @@ class _ListScreenState extends State<ListScreen> {
             ),
             Divider(),
             Expanded(
-              child: ListView.builder(itemCount: 10,itemBuilder: (context, index) {
+              child: ListView.builder(itemCount: providerW!.l1.length,itemBuilder: (context, index) {
                 return ListTile(
                   onTap:  () {
-                    Navigator.pushNamed(context, 'music');
+                    providerR!.changeIndex(index);
+                    Navigator.pushNamed(context, 'music',arguments: index);
                   },
                   tileColor: Colors.white,
-                  title: const Text("SONG NAME"),
-                  subtitle: const Text("Singer Name"),
-                  leading: const CircleAvatar(),
+                  title:  Text("${providerW!.l1[index].Sname}"),
+                  subtitle: Text("${providerW!.l1[index].SingerName}"),
+                  leading:  CircleAvatar(backgroundImage: AssetImage('${providerW!.l1[index].img}'),radius: 25,),
                   hoverColor: Colors.black,
                   trailing:
                   IconButton(onPressed: () {}, icon: const Icon(Icons.menu)),

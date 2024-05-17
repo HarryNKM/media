@@ -13,10 +13,11 @@ class VideoScreen extends StatefulWidget {
 class _VideoScreenState extends State<VideoScreen> {
   VideoProvider? providerR;
   VideoProvider? providerW;
+
   @override
   Widget build(BuildContext context) {
     providerR = context.read<VideoProvider>();
-    providerW = context.watch()<VideoProvider>();
+    providerW = context.watch<VideoProvider>();
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -28,7 +29,7 @@ class _VideoScreenState extends State<VideoScreen> {
           style: TextStyle(color: Colors.white),
         ),
       ),
-      body: Chewie(
+  body: Chewie(
         controller: providerW!.chewieController!,
       ),
     );

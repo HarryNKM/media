@@ -18,13 +18,17 @@ class _MusicScreenState extends State<MusicScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    context.read<MusicProvider>().isPlay=true;
     context.read<MusicProvider>().changemusic();
+    context.read<MusicProvider>().liveTime();
 
   }
   @override
   Widget build(BuildContext context) {
     providerR=context.read<MusicProvider>();
     providerW=context.watch<MusicProvider>();
+
+    int index =ModalRoute.of(context)!.settings.arguments as int;
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
@@ -45,18 +49,17 @@ class _MusicScreenState extends State<MusicScreen> {
               height: MediaQuery.sizeOf(context).width,
               width: MediaQuery.sizeOf(context).width,
               color: Colors.white,
-              child: Image.network(
-                "https://i1.sndcdn.com/artworks-000220516310-6i3ate-t500x500.jpg",fit: BoxFit.cover,),
+              child: Image.asset("${providerW!.l1[index].img}",fit: BoxFit.cover,)
             ),
             const SizedBox(
               height: 25,
             ),
-            const Text(
-              "PERFECT",
+             Text(
+              "${providerW!.l1[index].Sname}",
               style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
             ),
-            const Text(
-              "Ed Sheeran",
+             Text(
+              "${providerW!.l1[index].SingerName}",
               style: TextStyle(fontSize: 15),
             ),
             const SizedBox(height: 20),
@@ -81,9 +84,18 @@ class _MusicScreenState extends State<MusicScreen> {
                 ),
               ),
               IconButton(
-                onPressed: () async{
-                  await providerR!.audioplayer.playOrPause();
-                  providerR!.playpause();
+                onPressed: () {
+                  if(providerW!.isPlay)
+                 {
+                   providerW!.audioplayer.pause();
+                   providerR!.playpause();
+                 }
+               else
+                 {
+                   providerW!.audioplayer.play();
+                   providerR!.playpause();
+                 }
+
                 },
                 icon:  Icon(
                   providerW!.isPlay?Icons.pause:Icons.play_arrow,
@@ -114,16 +126,20 @@ class _MusicScreenState extends State<MusicScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("${providerW!.h}:${providerW!.m}:${providerW!.s}"),
+
+                Text("${providerW!.live.inHours}:${providerW!.live.inMinutes}:${providerW!.live.inSeconds}"),
                 SizedBox(
                   width: 310,
                   child: Slider(
                     activeColor: Colors.blueAccent,
-                    onChanged: (value) {},
-                    value: 0,
+                    onChanged: (value) {
+                      providerW!.audioplayer.seek(Duration(seconds: value.toInt()));
+                    },
+                    value: providerW!.live.inSeconds.toDouble(),
+                    max: providerW!.current.inSeconds.toDouble(),
                   ),
                 ),
-                const Text("00:00"),
+                Text("${providerW!.h}:${providerW!.m}:${providerW!.s}"),
               ],
             ),
             const SizedBox(height: 20),
